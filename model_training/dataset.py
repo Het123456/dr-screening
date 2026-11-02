@@ -1,6 +1,7 @@
 import csv
 import json
 from pathlib import Path
+from PIL import Image
 
 DATA_ROOT = Path(__file__).resolve().parent.parent.parent / "data" / "MMRDR"
 
@@ -48,6 +49,12 @@ class MMRDRDataset:
     def __getitem__(self, index):
         return self.samples[index]
 
+    def load_image(self, index, image_size=224):
+        # Open the picture, make sure it has 3 colour channels, and resize it to a square
+        sample = self.samples[index]
+        image = Image.open(sample.image_path).convert("RGB")
+        return image.resize((image_size, image_size))
+
 
 if __name__ == "__main__":
     for modality in ("cfp", "uwf"):
@@ -55,3 +62,10 @@ if __name__ == "__main__":
             data = MMRDRDataset(modality, split)
             print(modality, split, len(data))
     print(MMRDRDataset("cfp", "train")[0])
+
+    # Check that images load and resize
+    for modality in ("cfp", "uwf"):
+        data = MMRDRDataset(modality, "train")
+        original = Image.open(data[0].image_path)
+        resized = data.load_image(0)
+        print(modality, "original size:", original.size, "-> resized:", resized.size)
