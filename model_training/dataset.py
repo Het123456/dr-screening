@@ -11,6 +11,14 @@ DATA_ROOT = Path(__file__).resolve().parent.parent.parent / "data" / "MMRDR"
 NORM_MEAN = [0.485, 0.456, 0.406]
 NORM_STD = [0.229, 0.224, 0.225]
 
+# Random changes used on training images only. A mirrored left eye looks like a right eye,
+# so flipping is safe; rotation and brightness changes stay small.
+AUGMENT = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(brightness=0.1, contrast=0.1),
+])
+
 
 class Sample:
     def __init__(self, image_path, grade, lesions):
@@ -61,9 +69,13 @@ class MMRDRDataset:
         image = Image.open(sample.image_path).convert("RGB")
         return image.resize((image_size, image_size))
 
-    def get_item(self, index, image_size=224):
+    def get_item(self, index, image_size=224, augment=False):
         # Everything the model needs for one image: image tensor, grade, and the 7 lesions
         image = self.load_image(index, image_size)
+        if augment:
+            # Training only: small random changes so the model sees a slightly different
+            # picture every epoch and cannot just memorise the training images
+            image = AUGMENT(image)
         to_tensor = transforms.Compose([
             transforms.ToTensor(),                           # picture -> tensor, values 0 to 1
             transforms.Normalize(NORM_MEAN, NORM_STD),       # rescale to what the model expects

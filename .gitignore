@@ -3,4 +3,13 @@ __pycache__/
 .DS_Store
 data/
 weights/
+checkpoints/
 *.pt
+*.pth
+
+# Editor settings and Claude Code files: never committed
+.vscode/
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+PROGRESS_NOTES.md
