@@ -2,11 +2,10 @@ from abc import ABC, abstractmethod
 
 
 class Prediction:
-    # The answer a model gives for one image
     def __init__(self, grade, lesion_present, lesion_scores):
-        self.grade = grade                    # DR grade, 0 to 4
-        self.lesion_present = lesion_present  # list of 7 values, 1 = present, 0 = absent
-        self.lesion_scores = lesion_scores    # list of 7 confidences between 0 and 1
+        self.grade = grade
+        self.lesion_present = lesion_present
+        self.lesion_scores = lesion_scores
 
     def __repr__(self):
         return (f"Prediction(grade={self.grade}, lesion_present={self.lesion_present}, "
