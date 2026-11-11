@@ -1,9 +1,3 @@
-"""Score a trained model on a TEST set (ts* images it never saw during training).
-
-Run with, for example:
-    /opt/anaconda3/bin/python3 evaluate.py --model ../checkpoints/cfp/best.pt --modality cfp
-"""
-
 import argparse
 import json
 import time
@@ -22,36 +16,39 @@ from trainer import TrainingImages, pick_device
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
-def evaluate_on_test(model_path, modality, data_root=None, batch_size=16):
-    if data_root:
-        dataset.DATA_ROOT = Path(data_root)  # e.g. the shrunk 224 copy used for training
-    device = pick_device()
-
-    network = RETFoundNetwork()  # no RETFound file needed: best.pt already has every weight
+def load_network(model_path, device):
+    network = RETFoundNetwork()
     network.load_state_dict(torch.load(model_path, map_location="cpu", weights_only=True))
-    network.to(device).eval()
+    return network.to(device).eval()
 
-    data = MMRDRDataset(modality, "test")
-    loader = DataLoader(TrainingImages(data, list(range(len(data))), augment=False), batch_size=batch_size)
-    print(f"device: {device} | {modality} test images: {len(data)} | data: {dataset.DATA_ROOT}")
 
-    all_scores, all_lesions, all_grade_preds, all_grades = [], [], [], []
+def predict(network, data, indices, device, flip=False, batch_size=16):
+    loader = DataLoader(TrainingImages(data, indices, augment=False), batch_size=batch_size)
+    lesion_probs, grade_probs, lesion_true, grade_true = [], [], [], []
     start = time.time()
     with torch.no_grad():
         for step, (images, grades, lesions) in enumerate(loader, start=1):
-            lesion_logits, grade_logits = network(images.to(device))
-            all_scores.append(torch.sigmoid(lesion_logits).cpu())
-            all_grade_preds.append(grade_logits.argmax(dim=1).cpu())
-            all_lesions.append(lesions)
-            all_grades.append(grades)
+            images = images.to(device)
+            lesion_logits, grade_logits = network(images)
+            lesion_p, grade_p = torch.sigmoid(lesion_logits), torch.softmax(grade_logits, dim=1)
+            if flip:
+                lesion_logits, grade_logits = network(torch.flip(images, dims=[3]))
+                lesion_p = (lesion_p + torch.sigmoid(lesion_logits)) / 2
+                grade_p = (grade_p + torch.softmax(grade_logits, dim=1)) / 2
+            lesion_probs.append(lesion_p.cpu())
+            grade_probs.append(grade_p.cpu())
+            lesion_true.append(lesions)
+            grade_true.append(grades)
             if step % 20 == 0 or step == len(loader):
                 print(f"  batch {step}/{len(loader)}  ({time.time() - start:.0f}s)")
+    return torch.cat(lesion_probs), torch.cat(grade_probs), torch.cat(lesion_true), torch.cat(grade_true)
 
-    grade_preds, grade_true = torch.cat(all_grade_preds), torch.cat(all_grades)
-    metrics = compute_metrics(torch.cat(all_scores), torch.cat(all_lesions), grade_preds, grade_true)
-    # Rows = true grade, columns = predicted grade. Numbers on the diagonal are correct answers.
+
+def score(lesion_probs, grade_probs, lesion_true, grade_true):
+    grade_preds = grade_probs.argmax(dim=1)
+    metrics = compute_metrics(lesion_probs, lesion_true, grade_preds, grade_true)
     metrics["grade_confusion_matrix"] = confusion_matrix(grade_true, grade_preds, labels=[0, 1, 2, 3, 4]).tolist()
-    metrics["num_images"] = len(data)
+    metrics["num_images"] = len(grade_true)
     return metrics
 
 
@@ -67,10 +64,18 @@ if __name__ == "__main__":
     parser.add_argument("--model", default=str(REPO_ROOT / "checkpoints" / "cfp" / "best.pt"))
     parser.add_argument("--modality", default="cfp", choices=["cfp", "uwf"])
     parser.add_argument("--data_root", default=None, help="folder containing MMRDR-CFP / MMRDR-UWF (default: the original data)")
+    parser.add_argument("--flip", action="store_true", help="also average with the mirror image")
     parser.add_argument("--output", default=None, help="where to save the results JSON")
     args = parser.parse_args()
 
-    results = evaluate_on_test(args.model, args.modality, args.data_root)
+    if args.data_root:
+        dataset.DATA_ROOT = Path(args.data_root)
+    device = pick_device()
+    network = load_network(args.model, device)
+    data = MMRDRDataset(args.modality, "test")
+    print(f"device: {device} | {args.modality} test images: {len(data)} | flip: {args.flip} | data: {dataset.DATA_ROOT}")
+
+    results = score(*predict(network, data, list(range(len(data))), device, flip=args.flip))
     print(f"\nTEST RESULTS ({args.modality}):")
     print_metrics(results)
     print_confusion(results["grade_confusion_matrix"])
