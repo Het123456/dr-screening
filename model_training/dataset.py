@@ -7,12 +7,9 @@ from torchvision import transforms
 
 DATA_ROOT = Path(__file__).resolve().parent.parent.parent / "data" / "MMRDR"
 
-# Standard ImageNet values.
 NORM_MEAN = [0.485, 0.456, 0.406]
 NORM_STD = [0.229, 0.224, 0.225]
 
-# Random changes used on training images only. A mirrored left eye looks like a right eye,
-# so flipping is safe; rotation and brightness changes stay small.
 AUGMENT = transforms.Compose([
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
@@ -32,7 +29,6 @@ class Sample:
 
 class MMRDRDataset:
     def __init__(self, modality, split):
-        # modality is either 'cfp' or 'uwf' and split is either 'train' or 'test'
         if modality == 'cfp':
             self.folder = DATA_ROOT / "MMRDR-CFP"
             csv_name = 'FP.csv'
@@ -64,27 +60,23 @@ class MMRDRDataset:
         return self.samples[index]
 
     def load_image(self, index, image_size=224):
-        # Open the picture, make sure it has 3 colour channels, and resize it to a square
         sample = self.samples[index]
         image = Image.open(sample.image_path).convert("RGB")
         return image.resize((image_size, image_size))
 
     def get_item(self, index, image_size=224, augment=False):
-        # Everything the model needs for one image: image tensor, grade, and the 7 lesions
         image = self.load_image(index, image_size)
         if augment:
-            # Training only: small random changes so the model sees a slightly different
-            # picture every epoch and cannot just memorise the training images
             image = AUGMENT(image)
         to_tensor = transforms.Compose([
-            transforms.ToTensor(),                           # picture -> tensor, values 0 to 1
-            transforms.Normalize(NORM_MEAN, NORM_STD),       # rescale to what the model expects
+            transforms.ToTensor(),
+            transforms.Normalize(NORM_MEAN, NORM_STD),
         ])
         image_tensor = to_tensor(image)
 
         sample = self.samples[index]
-        grade = torch.tensor(sample.grade)                              # a single whole number
-        lesions = torch.tensor(sample.lesions, dtype=torch.float32)     # 7 values, 0.0 or 1.0
+        grade = torch.tensor(sample.grade)
+        lesions = torch.tensor(sample.lesions, dtype=torch.float32)
         return image_tensor, grade, lesions
 
 
@@ -95,7 +87,6 @@ if __name__ == "__main__":
             print(modality, split, len(data))
     print(MMRDRDataset("cfp", "train")[0])
 
-    # Check that images load and resize
     for modality in ("cfp", "uwf"):
         data = MMRDRDataset(modality, "train")
         original = Image.open(data[0].image_path)

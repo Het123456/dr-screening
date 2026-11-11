@@ -1,12 +1,9 @@
-"""Exercise 1: look at the MMRDR CFP labels (rough exploration script)."""
-
 import csv
 import json
 from pathlib import Path
 
 from PIL import Image
 
-# Folder that holds MMRDR-CFP, relative to this file. Change it if your data is elsewhere.
 CFP_FOLDER = Path(__file__).resolve().parent.parent.parent / "data" / "MMRDR" / "MMRDR-CFP"
 CSV_FILE = CFP_FOLDER / "FP.csv"
 
@@ -33,7 +30,6 @@ with open(CSV_FILE, newline="") as f:
 
         grade_counts[int(row["grade"])] += 1
 
-        # The lesion column is text like "[1, 0, 0, 0, 0, 0, 0]"; json.loads turns it into a list.
         lesions = json.loads(row["lesion"])
         for i in range(7):
             lesion_counts[i] += lesions[i]
@@ -48,7 +44,6 @@ print("\nImages with each lesion:")
 for name, count in zip(LESION_NAMES, lesion_counts):
     print(f"  {name}: {count}")
 
-# Show the first image with its labels.
 lesions = json.loads(first_row["lesion"])
 present = [name for name, v in zip(LESION_NAMES, lesions) if v == 1]
 print(f"\nFirst image: {first_row['image']}")
