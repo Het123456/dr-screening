@@ -1,0 +1,15 @@
+{
+  "referable_grade": 2,
+  "use_flip": true,
+  "cutoff": 0.2893,
+  "target_sensitivity_on_validation": 0.9,
+  "test_old_rule": {
+    "sensitivity": 0.8196,
+    "specificity": 0.9229
+  },
+  "test_new_rule": {
+    "sensitivity": 0.8942,
+    "specificity": 0.8388
+  },
+  "test_referral_auc": 0.9514
+}

@@ -1,0 +1,70 @@
+{
+  "use_flip": false,
+  "chosen_on": "validation, best sensitivity + specificity",
+  "num_referable_test_eyes": 1288,
+  "lesions": [
+    {
+      "name": "microaneurysm",
+      "cutoff": 0.52,
+      "test_sensitivity": 0.7671,
+      "test_specificity": 0.8374,
+      "referable_eyes_without_lesion": 24,
+      "false_alarm_rate_in_referable_eyes": 0.8333,
+      "false_alarm_rate_in_referable_eyes_at_0.5": 0.8333
+    },
+    {
+      "name": "hard exudate",
+      "cutoff": 0.5,
+      "test_sensitivity": 0.8289,
+      "test_specificity": 0.7744,
+      "referable_eyes_without_lesion": 421,
+      "false_alarm_rate_in_referable_eyes": 0.6033,
+      "false_alarm_rate_in_referable_eyes_at_0.5": 0.6033
+    },
+    {
+      "name": "intraretinal hemorrhage",
+      "cutoff": 0.69,
+      "test_sensitivity": 0.7819,
+      "test_specificity": 0.8342,
+      "referable_eyes_without_lesion": 366,
+      "false_alarm_rate_in_referable_eyes": 0.5519,
+      "false_alarm_rate_in_referable_eyes_at_0.5": 0.7268
+    },
+    {
+      "name": "VB/IRMA",
+      "cutoff": 0.64,
+      "test_sensitivity": 0.8009,
+      "test_specificity": 0.773,
+      "referable_eyes_without_lesion": 1057,
+      "false_alarm_rate_in_referable_eyes": 0.4768,
+      "false_alarm_rate_in_referable_eyes_at_0.5": 0.6254
+    },
+    {
+      "name": "neovascularization",
+      "cutoff": 0.5,
+      "test_sensitivity": 0.8738,
+      "test_specificity": 0.8929,
+      "referable_eyes_without_lesion": 987,
+      "false_alarm_rate_in_referable_eyes": 0.2259,
+      "false_alarm_rate_in_referable_eyes_at_0.5": 0.2259
+    },
+    {
+      "name": "vitreous hemorrhage",
+      "cutoff": 0.29,
+      "test_sensitivity": 0.957,
+      "test_specificity": 0.9516,
+      "referable_eyes_without_lesion": 986,
+      "false_alarm_rate_in_referable_eyes": 0.0903,
+      "false_alarm_rate_in_referable_eyes_at_0.5": 0.0619
+    },
+    {
+      "name": "retinal detachment",
+      "cutoff": 0.64,
+      "test_sensitivity": 0.9688,
+      "test_specificity": 0.9574,
+      "referable_eyes_without_lesion": 1224,
+      "false_alarm_rate_in_referable_eyes": 0.0882,
+      "false_alarm_rate_in_referable_eyes_at_0.5": 0.107
+    }
+  ]
+}
