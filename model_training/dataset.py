@@ -50,7 +50,7 @@ class MMRDRDataset:
                 if file_name.startswith(prefix):
                     image_path = self.folder / row["image"]
                     grade = int(row["grade"])
-                    lesions = json.loads(row["lesion"])
+                    lesions = [1 if value else 0 for value in json.loads(row["lesion"])]
                     self.samples.append(Sample(image_path, grade, lesions))
 
     def __len__(self):

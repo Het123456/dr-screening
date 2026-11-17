@@ -1,0 +1,127 @@
+{
+  "use_flip": true,
+  "fitted_on": "validation",
+  "likely_from": 0.7,
+  "possible_from": 0.3,
+  "lesions": [
+    {
+      "name": "microaneurysm",
+      "slope": 0.7403,
+      "intercept": 0.1288,
+      "test_likely": {
+        "eyes": 759,
+        "share_with_lesion": 0.9209
+      },
+      "test_possible": {
+        "eyes": 202,
+        "share_with_lesion": 0.5594
+      },
+      "test_unlikely": {
+        "eyes": 1264,
+        "share_with_lesion": 0.0506
+      }
+    },
+    {
+      "name": "hard exudate",
+      "slope": 0.7027,
+      "intercept": -0.4456,
+      "test_likely": {
+        "eyes": 349,
+        "share_with_lesion": 0.8911
+      },
+      "test_possible": {
+        "eyes": 311,
+        "share_with_lesion": 0.4566
+      },
+      "test_unlikely": {
+        "eyes": 1565,
+        "share_with_lesion": 0.0339
+      }
+    },
+    {
+      "name": "intraretinal hemorrhage",
+      "slope": 0.702,
+      "intercept": -0.4695,
+      "test_likely": {
+        "eyes": 293,
+        "share_with_lesion": 0.8464
+      },
+      "test_possible": {
+        "eyes": 318,
+        "share_with_lesion": 0.5629
+      },
+      "test_unlikely": {
+        "eyes": 1614,
+        "share_with_lesion": 0.052
+      }
+    },
+    {
+      "name": "VB/IRMA",
+      "slope": 0.4713,
+      "intercept": -2.1556,
+      "test_likely": {
+        "eyes": 0,
+        "share_with_lesion": null
+      },
+      "test_possible": {
+        "eyes": 7,
+        "share_with_lesion": 0.2857
+      },
+      "test_unlikely": {
+        "eyes": 2218,
+        "share_with_lesion": 0.0185
+      }
+    },
+    {
+      "name": "neovascularization",
+      "slope": 0.7312,
+      "intercept": -1.3204,
+      "test_likely": {
+        "eyes": 73,
+        "share_with_lesion": 0.9178
+      },
+      "test_possible": {
+        "eyes": 46,
+        "share_with_lesion": 0.6522
+      },
+      "test_unlikely": {
+        "eyes": 2106,
+        "share_with_lesion": 0.0114
+      }
+    },
+    {
+      "name": "vitreous hemorrhage",
+      "slope": 0.7691,
+      "intercept": -0.8229,
+      "test_likely": {
+        "eyes": 57,
+        "share_with_lesion": 0.7719
+      },
+      "test_possible": {
+        "eyes": 12,
+        "share_with_lesion": 0.25
+      },
+      "test_unlikely": {
+        "eyes": 2156,
+        "share_with_lesion": 0.0028
+      }
+    },
+    {
+      "name": "retinal detachment",
+      "slope": 0.9971,
+      "intercept": -0.9844,
+      "test_likely": {
+        "eyes": 10,
+        "share_with_lesion": 0.8
+      },
+      "test_possible": {
+        "eyes": 15,
+        "share_with_lesion": 0.6
+      },
+      "test_unlikely": {
+        "eyes": 2200,
+        "share_with_lesion": 0.0018
+      }
+    }
+  ]
+}

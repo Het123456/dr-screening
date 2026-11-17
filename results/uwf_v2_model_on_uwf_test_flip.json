@@ -1,0 +1,52 @@
+{
+  "lesion_auc": {
+    "microaneurysm": 0.874,
+    "hard exudate": 0.8848,
+    "intraretinal hemorrhage": 0.8947,
+    "VB/IRMA": 0.8755,
+    "neovascularization": 0.9591,
+    "vitreous hemorrhage": 0.9863,
+    "retinal detachment": 0.9921
+  },
+  "mean_lesion_auc": 0.9238,
+  "grade_accuracy": 0.6038,
+  "grade_kappa": 0.8218,
+  "grade_confusion_matrix": [
+    [
+      635,
+      87,
+      67,
+      4,
+      7
+    ],
+    [
+      264,
+      102,
+      130,
+      6,
+      7
+    ],
+    [
+      60,
+      59,
+      323,
+      85,
+      17
+    ],
+    [
+      5,
+      9,
+      133,
+      194,
+      17
+    ],
+    [
+      5,
+      3,
+      21,
+      43,
+      314
+    ]
+  ],
+  "num_images": 2597
+}
